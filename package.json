@@ -1,0 +1,14 @@
+{
+  "name": "awap23-demoapp",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {    
+    "build-frontend": "npm --prefix frontend run build",
+    "move-frontend-build-to-release": "mv frontend/build release/frontend",
+    "install-backend": "npm --prefix backend install",
+    "build:azure": "npm run install-backend",
+    "start": "node backend/index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
