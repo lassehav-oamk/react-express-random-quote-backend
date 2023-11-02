@@ -8,7 +8,7 @@ app.use(cors());
 const quotes = [
   {
     movieName: "The Shawshank Redemption",
-    quote: "Get busy living or get busy dying.",
+    quote: "Get busy living or get busy dying",
   },
   {
     movieName: "The Godfather",
