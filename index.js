@@ -2,40 +2,27 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 3001;
+const db = require("./database");
 
 app.use(cors());
-
-const quotes = [
-  {
-    movieName: "The Shawshank Redemption",
-    quote: "Get busy living or get busy dying",
-  },
-  {
-    movieName: "The Godfather",
-    quote: "I'm going to make him an offer he can't refuse.",
-  },
-  {
-    movieName: "The Dark Knight",
-    quote: "Why so serious?",
-  },
-  {
-    movieName: "The Godfather: Part II",
-    quote: "Keep your friends close, but your enemies closer.",
-  },
-];
+db.initConnection();
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/quotes/:count", (req, res) => {
+app.post("/dropCreatePopulateDb", async (req, res) => {
+  await db.dropCreatePopulateDb();
+  res.send("Database dropped, created and populated");
+});
+
+app.get("/quotes/:count", async (req, res) => {
   const count = req.params.count;
 
-  let randomQuotes = [];
-  for (let i = 0; i < count; i++) {
-    let randomIndex = Math.floor(Math.random() * quotes.length);
-    randomQuotes.push(quotes[randomIndex]);
-  }
+  const randomQuotes = await db.executeQuery(
+    "SELECT * FROM quotes ORDER BY RAND() LIMIT ?",
+    [count]
+  );
 
   res.json(randomQuotes);
 });
