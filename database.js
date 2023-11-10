@@ -1,3 +1,4 @@
+const fs = require("fs");
 const mysql = require("mysql2/promise");
 //const dotenv = require("dotenv");
 //dotenv.config();
@@ -35,6 +36,7 @@ async function dropCreatePopulateDb() {
 }
 
 function initConnection() {
+  console.log("Initializing database connection pool");
   try {
     let dbConfig = {
       host: process.env.DB_HOST || "localhost",
