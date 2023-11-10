@@ -1,7 +1,5 @@
 const fs = require("fs");
 const mysql = require("mysql2/promise");
-//const dotenv = require("dotenv");
-//dotenv.config();
 
 let dbPool = null;
 
@@ -38,6 +36,8 @@ async function dropCreatePopulateDb() {
 function initConnection() {
   console.log("Initializing database connection pool");
   try {
+    // The environment variables are set in the Azure App Service application settings
+    // If the environment variable is not set, then use the default value for development in localhost
     let dbConfig = {
       host: process.env.DB_HOST || "localhost",
       user: process.env.DB_USER || "testuser",
@@ -45,7 +45,12 @@ function initConnection() {
       database: process.env.DB_NAME || "awap23-movie-quote-db",
       connectionLimit: 10,
     };
+
+    // WEBSITE_RESOURCE_GROUP is a special environment variable set by Azure App Service
+    // It is only set if the app is running in Azure App Service
     if (process.env.WEBSITE_RESOURCE_GROUP != undefined) {
+      // We are running in Azure App Service
+      // Use Azure Database for MySQL
       dbConfig.ssl = {
         ca: fs.readFileSync("./azure-db-ssl-cert/DigiCertGlobalRootCA.crt.pem"),
       };
