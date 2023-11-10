@@ -1,6 +1,6 @@
 const mysql = require("mysql2/promise");
-const dotenv = require("dotenv");
-dotenv.config();
+//const dotenv = require("dotenv");
+//dotenv.config();
 
 let dbPool = null;
 
@@ -36,13 +36,19 @@ async function dropCreatePopulateDb() {
 
 function initConnection() {
   try {
-    dbPool = mysql.createPool({
+    let dbConfig = {
       host: process.env.DB_HOST || "localhost",
       user: process.env.DB_USER || "testuser",
       password: process.env.DB_PASSWORD || "testuser",
       database: process.env.DB_NAME || "awap23-movie-quote-db",
       connectionLimit: 10,
-    });
+    };
+    if (process.env.WEBSITE_RESOURCE_GROUP != undefined) {
+      dbConfig.ssl = {
+        ca: fs.readFileSync("./azure-db-ssl-cert/DigiCertGlobalRootCA.crt.pem"),
+      };
+    }
+    dbPool = mysql.createPool(dbConfig);
   } catch (err) {
     console.log(err);
   }
