@@ -4,6 +4,7 @@ const cors = require("cors");
 const port = process.env.PORT || 3001;
 const db = require("./database");
 
+app.use(express.json()) // for parsing application/json
 app.use(cors());
 db.initConnection();
 
@@ -25,6 +26,18 @@ app.get("/quotes/:count", async (req, res) => {
   );
 
   res.json(randomQuotes);
+});
+
+app.post("/quotes", async (req, res) => {
+  const quote = req.body.quote;
+  const movie = req.body.movie;
+
+  await db.executeQuery("INSERT INTO quotes (quote, movie) VALUES (?, ?)", [
+    quote,
+    movie,
+  ]);
+
+  res.send("Quote added");
 });
 
 app.listen(port, () => {
